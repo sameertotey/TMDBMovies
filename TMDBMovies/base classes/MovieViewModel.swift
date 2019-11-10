@@ -19,7 +19,7 @@ struct MovieViewModel {
     
     static func createPopularMovieCellViewModel(for movie: Movie ) -> PopularMovieCellViewModel {
         
-        let url = "https://image.tmdb.org/t/p/w154\(movie.poster_path ?? movie.backdrop_path ?? "")"
+        let url = "https://image.tmdb.org/t/p/w92\(movie.poster_path ?? movie.backdrop_path ?? "")"
         return PopularMovieCellViewModel( titleText: movie.title,
                                           posterImageUrl: url,
                                           popularityLabelText: movie.popularity.getAttributedString(with: "Popularity"),
@@ -30,22 +30,26 @@ struct MovieViewModel {
     static func createTopRatedMovieViewModel(for movie: Movie ) -> TopRatedTableViewCellViewModel {
           
             let url = "https://image.tmdb.org/t/p/w154\(movie.poster_path ?? movie.backdrop_path ?? "")"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateString = "\(dateFormatter.string(from: movie.releaseDate))"
             return TopRatedTableViewCellViewModel( titleText: movie.title,
                                        posterImageUrl: url,
                                        popularityLabelText: movie.popularity.getAttributedString(with: "Popularity"),
                                        voteCountLabelText:  movie.vote_count.getAttributedString(with: "Vote Count"),
-                                       voteAverageLabelText: movie.vote_average.getAttributedString(with: "Vote Average"))
+                                       voteAverageLabelText: movie.vote_average.getAttributedString(with: "Vote Average"),
+                                       releaseDateLabelText: dateString.getAttributedString(with: "Release Date"))
         }
     
       static func createNowPlayingMovieCellViewModel(for movie: Movie ) -> NowPlayingMovieCellViewModel {
              let dateFormatter = DateFormatter()
              dateFormatter.dateFormat = "yyyy-MM-dd"
              let url = "https://image.tmdb.org/t/p/w92\(movie.poster_path ?? movie.backdrop_path ?? "")"
-             let releaseDate = "Release Date: \(dateFormatter.string(from: movie.releaseDate))"
+             let releaseDate = "\(dateFormatter.string(from: movie.releaseDate))"
              return NowPlayingMovieCellViewModel( titleText: movie.title,
                                         overviewText: movie.overview,
                                         posterImageUrl: url,
-                                        releastDateText:  releaseDate)
+                                        releastDateText: releaseDate.getAttributedString(with: "Release Date"))
          }
     
     
@@ -92,3 +96,4 @@ extension String {
         return result
     }
 }
+

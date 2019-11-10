@@ -25,7 +25,7 @@ class NowPlayingTableViewCell: UITableViewCell {
             {
                 posterImageView?.sd_setImage(with: URL( string: movieCellViewModel?.posterImageUrl ?? "" ))
             }
-            releaseDateLabel.text = movieCellViewModel?.releastDateText
+            releaseDateLabel.attributedText  = movieCellViewModel?.releastDateText
         }
     }
 }
@@ -34,7 +34,7 @@ struct NowPlayingMovieCellViewModel {
     let titleText: String
     let overviewText: String
     let posterImageUrl: String
-    let releastDateText: String
+    let releastDateText: NSAttributedString
     
    
 }
