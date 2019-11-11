@@ -44,8 +44,6 @@ struct MovieViewModel {
                                         posterImageUrl: url,
                                         releastDateText: releaseDate.getAttributedString(with: "Release Date"))
          }
-    
-    
 }
 
 extension Float {

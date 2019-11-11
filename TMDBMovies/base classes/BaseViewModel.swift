@@ -8,26 +8,6 @@
 
 import Foundation
 
-extension ViewModel {
-    
-//    var isLoading: Bool = false {
-//        didSet {
-//            self.updateLoadingStatus?()
-//        }
-//    }
-//
-//    var alertMessage: String? {
-//        didSet {
-//            self.showAlertClosure?()
-//        }
-//    }
-    
-//    var reloadTableViewClosure: (()->())?
-//    var showAlertClosure: (()->())?
-//    var updateLoadingStatus: (()->())?
-    
-}
-
 protocol ViewModel {
     var isLoading: Bool {get set }
     var alertMessage: String? {get set }
@@ -52,8 +32,8 @@ extension MoviesViewModel {
 class BaseMoviesViewModel: MoviesViewModel {
     
     var numberOfCells: Int {
-          return movies.count
-      }
+        return movies.count
+    }
     
     var reloadTableViewClosure: (() -> ())?
     
@@ -82,7 +62,7 @@ class BaseMoviesViewModel: MoviesViewModel {
     func initFetch(endpoint: APIService.Endpoint) {
         self.isLoading = true
         APIService.shared.GET(endpoint: endpoint, params: nil) {
-             (result: Result<PaginatedResponse<Movie>, APIService.APIError>) in
+            (result: Result<PaginatedResponse<Movie>, APIService.APIError>) in
             self.isLoading = false
             switch result {
             case let .success(response):
@@ -93,5 +73,4 @@ class BaseMoviesViewModel: MoviesViewModel {
             }
         }
     }
-    
 }
