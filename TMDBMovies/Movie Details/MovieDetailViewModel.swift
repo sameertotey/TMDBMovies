@@ -17,14 +17,22 @@ class MovieDetailViewModel: ViewModel {
     private var movieDetail: Movie? {
         didSet {
             if let movie = movieDetail {
-                setupMovieDisplayFields(movie)
+                movieDetailsSetClosure?(createMovieDetailFields(for: movie))
             }
         }
     }
     
-    var movieDetailsSetClosure: ((_ titleText: String, _ overviewText: String, _ porterImageUrl: String, _ genres: NSAttributedString)->())?
+    var latestMovieId: Int? {
+        didSet {
+            if let id = latestMovieId {
+                initFetchDetail(for: id)
+            }
+        }
+    }
+    
+    var movieDetailsSetClosure: ((_ fields: MovieDetailFields)->())?
   
-    func initFetch(for id: Int) {
+    func initFetchDetail(for id: Int) {
         self.isLoading = true
         APIService.shared.GET(endpoint: .movieDetail(movie: id), params: nil) {
             [weak self] (result: Result<Movie, APIService.APIError>) in
@@ -39,13 +47,36 @@ class MovieDetailViewModel: ViewModel {
         }
     }
     
-    private func setupMovieDisplayFields(_ movie: Movie) {
-        let titleText = movie.title
-        let overviewText = movie.overview
-        let posterImageUrl = "https://image.tmdb.org/t/p/original\(movie.poster_path ?? movie.backdrop_path ?? "")"
+    func fetchLatest() {
+           self.isLoading = true
+           APIService.shared.GET(endpoint: .latest, params: nil) {
+               [weak self] (result: Result<Movie, APIService.APIError>) in
+               self?.isLoading = false
+               switch result {
+               case let .success(response):
+                    self?.latestMovieId = response.id
+               case let .failure(err):
+                   self?.alertMessage = "\(err)"
+                   break
+               }
+           }
+       }
+    
+    private func createMovieDetailFields(for movie: Movie) -> MovieDetailFields {
         let genres = movie.genres?.map {$0.name} ?? [String]()
-        let genreText = getGenresDisplayText(label: "Genre", genres: genres)
-        movieDetailsSetClosure?(titleText, overviewText, posterImageUrl, genreText)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = "\(dateFormatter.string(from: movie.releaseDate))"
+        return MovieDetailFields(
+            titleText: movie.title,
+            overviewText: movie.overview,
+            posterImageUrl: "https://image.tmdb.org/t/p/original\(movie.poster_path ?? movie.backdrop_path ?? "")",
+            genreText: getGenresDisplayText(label: "Genre", genres: genres),
+            popularityLabelText: movie.popularity.getAttributedString(with: "Popularity"),
+            voteCountLabelText:  movie.vote_count.getAttributedString(with: "Vote Count"),
+            voteAverageLabelText: movie.vote_average.getAttributedString(with: "Vote Average"),
+            releaseDateLabelText: dateString.getAttributedString(with: "Release Date")
+        )
     }
 
     private func getGenresDisplayText(label: String, genres: [String]) -> NSAttributedString {
@@ -61,4 +92,15 @@ class MovieDetailViewModel: ViewModel {
         }
         return result
     }
+}
+
+struct MovieDetailFields {
+    let titleText: String
+    let overviewText: String
+    let posterImageUrl: String
+    let genreText: NSAttributedString
+    let popularityLabelText: NSAttributedString
+    let voteCountLabelText: NSAttributedString
+    let voteAverageLabelText: NSAttributedString
+    let releaseDateLabelText: NSAttributedString
 }

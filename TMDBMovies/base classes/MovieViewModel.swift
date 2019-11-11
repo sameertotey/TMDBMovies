@@ -9,13 +9,6 @@
 import UIKit
 
 struct MovieViewModel {
-    let titleText: String
-    let posterImageUrl: String
-    let popularityLabelText: NSAttributedString
-    let voteCountLabelText: NSAttributedString
-    let voteAverageLabelText: NSAttributedString
-    let overviewText: String
-    let releastDateText: String
     
     static func createPopularMovieCellViewModel(for movie: Movie ) -> PopularMovieCellViewModel {
         
@@ -96,4 +89,5 @@ extension String {
         return result
     }
 }
+
 
