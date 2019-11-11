@@ -15,6 +15,8 @@ class TopRatedTableViewCell: UITableViewCell {
     @IBOutlet weak var popularityLabel: UILabel!
     @IBOutlet weak var voteCountLabel: UILabel!
     @IBOutlet weak var voteAverageLabel: UILabel!
+    @IBOutlet weak var releaseDateLabel: UILabel!
+    
     var movieCellViewModel : TopRatedTableViewCellViewModel? {
         didSet {
             titleLabel.text = movieCellViewModel?.titleText
@@ -28,6 +30,8 @@ class TopRatedTableViewCell: UITableViewCell {
             popularityLabel.attributedText = movieCellViewModel?.popularityLabelText
             voteCountLabel.attributedText = movieCellViewModel?.voteCountLabelText
             voteAverageLabel.attributedText = movieCellViewModel?.voteAverageLabelText
+            releaseDateLabel.attributedText = movieCellViewModel?.releaseDateLabelText
+            
         }
     }
 }
@@ -38,4 +42,5 @@ struct TopRatedTableViewCellViewModel {
     let popularityLabelText: NSAttributedString
     let voteCountLabelText: NSAttributedString
     let voteAverageLabelText: NSAttributedString
+    let releaseDateLabelText: NSAttributedString
 }
